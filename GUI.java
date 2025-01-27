@@ -27,6 +27,7 @@ public class GUI implements ActionListener {
 
     public static void main(String[] args) {
 
+        //creating the GUI
         panel = new JPanel();
         frame = new JFrame();
         frame.setSize(290, 360);
@@ -128,19 +129,11 @@ public class GUI implements ActionListener {
     }
 
     @Override
+    //ActionListener for the buttons. Reads the input from the buttons and performs the calculations.
     public void actionPerformed(ActionEvent button) {
         String buttonText = button.getActionCommand();
         Object source = button.getSource();
-        /*
-        if (startNew && source != buttonClear) {
-            if (!"=".equals(buttonText) && !"+".equals(buttonText) && !"*".equals(buttonText) && !"-".equals(buttonText) && !"/".equals(buttonText)) {
-                currentText = buttonText;
-                field.setText(currentText);
-                startNew = false;
-            } else {
-                action = buttonText.charAt(0);
-            }
-        } else {*/
+            //If the button pressed is a number, add it to the currentText
             if (buttonText.matches("^[0-9].*")) {
                 if (!startNew) {
                     currentText += buttonText;
@@ -149,14 +142,17 @@ public class GUI implements ActionListener {
                     currentText = buttonText;
                     startNew = false;
                 }
+            // If the button was enter, perform the calculations, and clear memory
             } else if (source == buttonEnter) {
                 secondNumber = Double.valueOf(currentText);
                 Calculate(action);
                 currentText = Double.toString(result);
                 reset();
+            // If the button was clear, reset the calculator
             } else if (source == buttonClear) {
                 reset();
                 currentText = null;
+            // If the button was an operator, updates tha action and makes calculation if needed
             } else {
                 if (firstNumber == null) {
                     firstNumber = Double.valueOf(currentText);
@@ -168,17 +164,21 @@ public class GUI implements ActionListener {
                     firstNumber = result;
                     action = buttonText.charAt(0);
                 }
+                //updates the currentText and sets startNew to true, so the program knows to start a new calculation
                 currentText = Double.toString(firstNumber);
                 startNew = true;
+                //Delay to make the program more reliable
                 try {
                     TimeUnit.MILLISECONDS.sleep(50);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                 }
             }
+            //updates the textfield
             field.setText(currentText);
-        
     }
+
+    //Resets the calculator memory
     public static void reset(){
         firstNumber = null;
         secondNumber = null;
@@ -187,6 +187,7 @@ public class GUI implements ActionListener {
         startNew = true;
     }
 
+    //calls the calculation methods from the Calculations class
     public void Calculate(char calculation) {
         switch (calculation) {
             case '+' ->
