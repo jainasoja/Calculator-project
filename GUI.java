@@ -131,6 +131,7 @@ public class GUI implements ActionListener {
     public void actionPerformed(ActionEvent button) {
         String buttonText = button.getActionCommand();
         Object source = button.getSource();
+        /*
         if (startNew && source != buttonClear) {
             if (!"=".equals(buttonText) && !"+".equals(buttonText) && !"*".equals(buttonText) && !"-".equals(buttonText) && !"/".equals(buttonText)) {
                 currentText = buttonText;
@@ -139,32 +140,24 @@ public class GUI implements ActionListener {
             } else {
                 action = buttonText.charAt(0);
             }
-        } else {
-            if (currentText != null && buttonText.matches("^[0-9].*")) {
-                currentText += buttonText;
-                startNew = false;
+        } else {*/
+            if (buttonText.matches("^[0-9].*")) {
+                if (!startNew) {
+                    currentText += buttonText;
+                    firstNumber = null;
+                } else {  
+                    currentText = buttonText;
+                    startNew = false;
+                }
             } else if (source == buttonEnter) {
                 secondNumber = Double.valueOf(currentText);
                 Calculate(action);
                 currentText = Double.toString(result);
-                firstNumber = result;
-                startNew = true;
-                action = null;
-                secondNumber = null;
-                isEntered = true;
+                reset();
             } else if (source == buttonClear) {
-                isEntered = false;
-                startNew = true;
-                firstNumber = null;
-                secondNumber = null;
-                action = null;
+                reset();
                 currentText = null;
             } else {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(50);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
                 if (firstNumber == null) {
                     firstNumber = Double.valueOf(currentText);
                     action = buttonText.charAt(0);
@@ -177,9 +170,21 @@ public class GUI implements ActionListener {
                 }
                 currentText = Double.toString(firstNumber);
                 startNew = true;
+                try {
+                    TimeUnit.MILLISECONDS.sleep(50);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                }
             }
             field.setText(currentText);
-        }
+        
+    }
+    public static void reset(){
+        firstNumber = null;
+        secondNumber = null;
+        action = null;
+        result = null;
+        startNew = true;
     }
 
     public void Calculate(char calculation) {
